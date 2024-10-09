@@ -11,7 +11,7 @@ const test_password = `${process.env.TEST_PASSWORD}`;
 const baseUrlApi = `${process.env.BASE_URL_API}`;
 
 
-test.describe("Frontend test", () => {
+test.describe("Front-end test", () => {
   test("TC01: heading must be visible", async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
@@ -51,7 +51,7 @@ test.describe.serial('Backend test', () => {
   let fakeDataGenerator: FakeDataGenerator;
 
 
-  test.beforeAll('login, get access token', async ({ request }) => {
+  test.beforeAll('Login, get access token', async ({ request }) => {
       apiHelper = new APIHelper(baseUrlApi);
       fakeDataGenerator = new FakeDataGenerator();
       const login = await apiHelper.login(request);
