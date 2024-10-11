@@ -1,4 +1,4 @@
-# Hotel App Pipeline - README
+# Hotel App Pipeline
 
 ## Overview
 
