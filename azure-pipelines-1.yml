@@ -1,62 +1,31 @@
 trigger:
 - main
-- gh-actions
 
 pr:
 - main
 
-variables:
-- group: Hotel App Variables
+pool:
+  vmImage: ubuntu-latest
 
-jobs:
-  Hotel-App-tests:
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-      - task: Checkout@v2
-        displayName: "Check out repository code"
+steps:
+  - checkout: self
+    displayName: "Checkout repository code"
 
-      - script: |
-          npm install
-        displayName: "Install dependencies"
+  - script: |
+      npm install
+    displayName: "Install dependencies"
 
+  - script: |
+      npx playwright install
+    displayName: "Install Playwright"
 
-      - script: |
-          npx playwright install
-        displayName: "Install Playwright"
+  - script: |
+      npx playwright test
+    displayName: "Run Playwright tests"
 
-      - script: |
-          docker pull rasilva1986/my-vue-app:v1
-        displayName: "Pull docker image"
-
-
-      - script: |
-          docker run --name hotelapp -d -p 3000:3000 rasilva1986/my-vue-app:v1
-        displayName: "Start application"
-
-
-      - script: |
-          npx wait-on http://localhost:3000
-        displayName: "Wait for application to start"
-
-
-      - script: |
-          npm run test
-        env:
-          TEST_USERNAME: $(TEST_USERNAME)
-          TEST_PASSWORD: $(TEST_PASSWORD)
-          BASE_URL: $(BASE_URL)
-          BASE_URL_API: $(BASE_URL_API)
-        displayName: "Run tests"
-
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: './playwright-report'
-          artifactName: 'playwright-test-results'
-        displayName: "Save test result as artifact"
-
-
-      - script: |
-          docker stop hotelapp
-        displayName: "Terminate application"
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: './playwright-report'
+      artifactName: 'test-results'
+    displayName: "Save test results as artifact"
 
